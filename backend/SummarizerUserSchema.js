@@ -5,7 +5,7 @@ const SummarizerUserSchema = new mongoose.Schema({
   password: { type: String, required: true },
   history: [
     {
-      content: { type: String, required: true },
+      historyContent: { type: String },
       date: { type: Date, default: Date.now },
     },
   ],

@@ -15,7 +15,7 @@ app.use(cors());
 
 // MongoDB connection
 mongoose.connect(
-  `mongodb+srv://${process.env.USERNAME}:${process.env.PASSWORD}@cluster0.h3qloyh.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`
+  `mongodb+srv://AI_summarizer:Adnan179@cluster0.h3qloyh.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`
 );
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "MongoDB connection error:"));
@@ -69,9 +69,10 @@ app.post("/api/auth/signin", async (req, res) => {
     const payload = {
       user: {
         id: user.id,
+        username: user.username,
       },
     };
-    jwt.sign(payload, jwtSecret, { expiresIn: 3600 }, (err, token) => {
+    jwt.sign(payload, jwtSecret, { expiresIn: 2400 }, (err, token) => {
       if (err) throw err;
       res.json({ token });
     });
@@ -81,50 +82,43 @@ app.post("/api/auth/signin", async (req, res) => {
   }
 });
 
-// Add history route
-app.post("/api/history/add", authenticateToken, async (req, res) => {
-  const { username, content } = req.body;
+// Add history
+app.post("/api/history/add/:username", async (req, res) => {
+  const { username } = req.params;
+  const { historyContent } = req.body;
+
   try {
-    let user = await SummarizerUser.findOne({ username });
+    const user = await SummarizerUser.findOne({ username });
     if (!user) {
       return res.status(404).json({ msg: "User not found" });
     }
-    user.history.push({ content });
+
+    user.history.push({ historyContent: historyContent });
     await user.save();
+
     res.status(200).json({ msg: "History added successfully" });
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send("Server Error");
+  } catch (error) {
+    console.error("Error adding history:", error);
+    res.status(500).json({ msg: "Server Error" });
   }
 });
 
-// Get history route
-app.get("/api/history/:username", authenticateToken, async (req, res) => {
-  const { username } = req.params;
+// Get history
+app.get("/api/history/:username", async (req, res) => {
+  const username = req.params.username;
   try {
-    let user = await SummarizerUser.findOne({ username });
+    const user = await SummarizerUser.findOne({ username });
     if (!user) {
       return res.status(404).json({ msg: "User not found" });
+      console.log(username);
     }
+
     res.status(200).json(user.history);
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server Error");
   }
 });
-
-// Middleware function to authenticate JWT token
-function authenticateToken(req, res, next) {
-  const authHeader = req.headers["authorization"];
-  const token = authHeader && authHeader.split(" ")[1];
-  if (token == null) return res.sendStatus(401);
-
-  jwt.verify(token, jwtSecret, (err, user) => {
-    if (err) return res.sendStatus(403);
-    req.user = user;
-    next();
-  });
-}
 
 // Start server
 app.listen(PORT, () => {

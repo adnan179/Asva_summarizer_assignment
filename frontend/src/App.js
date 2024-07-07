@@ -3,7 +3,7 @@ import Scraper from "./components/Scraper";
 import Summarizer from "./components/Summarizer";
 import Auth from "./components/Auth";
 import axios from "axios";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const App = () => {

@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const Auth = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isSignUp, setIsSignUp] = useState(true);
-  const [error, setError] = useState("");
 
   //function to handle sign up and sign in
   const handleSubmit = async (e) => {
@@ -18,20 +18,19 @@ const Auth = () => {
         username: email,
         password: password,
       });
-
-      if (response.data.token) {
-        const token = response.data.token;
+      const { token } = response.data;
+      localStorage.setItem("userName", email);
+      if (token) {
         localStorage.setItem("token", token);
         axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-        setError("");
+        toast.success("successfully logged in");
         window.location.reload();
       } else if (isSignUp) {
-        window.location.reload();
         setIsSignUp(false);
-        setError("Sign up successful! Please log in.");
+        toast.success("successfully signed up!");
       }
     } catch (error) {
-      setError(
+      toast.success(
         error.response?.data?.msg || "Invalid credentials. Please try again."
       );
       console.error("Auth error:", error);
@@ -74,7 +73,6 @@ const Auth = () => {
             ? "Already have an account? Sign In"
             : "Don't have an account? Sign Up"}
         </p>
-        {error && <p className="text-red-600 font-medium">{error}</p>}
       </form>
     </div>
   );
