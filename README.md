@@ -50,7 +50,7 @@ Asva Summarizer is a web application that allows users to input text and generat
 1. **Clone the repository:**
 
    ```bash
-   git clone 
+   git clone https://github.com/adnan179/Asva_summarizer_assignment.git
    cd project-name
 2. **Install front-end dependencies:**
    ```bash
