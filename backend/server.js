@@ -14,9 +14,7 @@ app.use(express.json());
 app.use(cors());
 
 // MongoDB connection
-mongoose.connect(
-  `mongodb+srv://AI_summarizer:Adnan179@cluster0.h3qloyh.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`
-);
+mongoose.connect("Paste your mongoDB url");
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "MongoDB connection error:"));
 db.once("open", () => {
