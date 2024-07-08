@@ -70,3 +70,27 @@ Asva Summarizer is a web application that allows users to input text and generat
    ```bash
    cd backend
    nodemon server
+
+
+## Project Structure
+asva-summarizer
+├── backend
+│   ├── models
+│   │   └── SummarizerUser.js
+│   ├── routes
+│   │   ├── auth.js
+│   │   ├── history.js
+│   ├── server.js
+│   └── .env
+├── frontend
+│   ├── src
+│   │   ├── components
+│   │   │   ├── Auth.js
+│   │   │   └── Summarizer.js
+│   │   ├── App.js
+│   │   └── index.js
+│   ├── public
+│   │   └── index.html
+│   └── tailwind.config.js
+└── README.md
+
